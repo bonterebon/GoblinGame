@@ -17,15 +17,18 @@ class Goblin(object):
                                  pygame.image.load('images/goblin_left_idle_2.png').convert_alpha()]
         self.left_idle_images = self.scale_sprites(self.left_idle_images)
         self.right_idle_images = [pygame.image.load('images/goblin_right_idle_1.png').convert_alpha(),
-                                 pygame.image.load('images/goblin_right_idle_2.png').convert_alpha()]
+                                  pygame.image.load('images/goblin_right_idle_2.png').convert_alpha()]
         self.right_idle_images = self.scale_sprites(self.right_idle_images)
 
         self.left_walk_images = [pygame.image.load('images/goblin_left_walk_1.png').convert_alpha(),
                                  pygame.image.load('images/goblin_left_walk_2.png').convert_alpha()]
         self.left_walk_images = self.scale_sprites(self.left_walk_images)
         self.right_walk_images = [pygame.image.load('images/goblin_right_walk_1.png').convert_alpha(),
-                                 pygame.image.load('images/goblin_right_walk_2.png').convert_alpha()]
+                                  pygame.image.load('images/goblin_right_walk_2.png').convert_alpha()]
         self.right_walk_images = self.scale_sprites(self.right_walk_images)
+        self.down_walk_images = [pygame.image.load('images/goblin_down_walk_1.png').convert_alpha(),
+                                  pygame.image.load('images/goblin_down_walk_2.png').convert_alpha()]
+        self.down_walk_images = self.scale_sprites(self.down_walk_images)
 
         self.width = self.left_idle_images[0].get_size()[0]
         self.height = self.left_idle_images[0].get_size()[1] - 20
@@ -48,11 +51,15 @@ class Goblin(object):
                 window.blit(self.left_walk_images[self.animation_count], (self.x, self.y))
             elif self.right:
                 window.blit(self.right_walk_images[self.animation_count], (self.x, self.y))
+            elif self.down:
+                window.blit(self.down_walk_images[self.animation_count], (self.x, self.y))
         else:
             if self.left:
                 window.blit(self.left_idle_images[self.animation_count], (self.x, self.y))
             if self.right:
                 window.blit(self.right_idle_images[self.animation_count], (self.x, self.y))
+            else:
+                window.blit(self.left_idle_images[self.animation_count], (self.x, self.y))
         self.animation_count += 1
         # pygame.draw.rect(window, (255, 0, 0), self.hitbox, 2) # draws self.hitbox
 
@@ -116,10 +123,9 @@ class Game(object):
                     if event.key == pygame.K_ESCAPE:
                         running = False
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_RIGHT\
-                            or event.key == pygame.K_d:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_RIGHT \
+                            or event.key == pygame.K_d or event.key == pygame.K_DOWN or event.key == pygame.K_s:
                         self.goblin.is_walking = False
-
 
             keys = pygame.key.get_pressed()
 
@@ -132,7 +138,8 @@ class Game(object):
             elif keys[pygame.K_UP] or keys[pygame.K_w] and self.goblin.hitbox[1] > 0:
                 self.goblin.is_walking = True
                 self.goblin.move('u')
-            elif keys[pygame.K_DOWN] or keys[pygame.K_s] and self.goblin.hitbox[1] <= self.height - self.goblin.hitbox[3]\
+            elif keys[pygame.K_DOWN] or keys[pygame.K_s] and self.goblin.hitbox[1] <= self.height - self.goblin.hitbox[
+                3] \
                     - self.goblin.velocity:
                 self.goblin.is_walking = True
                 self.goblin.move('d')
